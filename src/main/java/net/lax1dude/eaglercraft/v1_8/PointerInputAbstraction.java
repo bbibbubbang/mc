@@ -166,7 +166,7 @@ public class PointerInputAbstraction {
 	}
 
 	public static boolean isTouchMode() {
-		return true;
+		return touchMode;
 	}
 
 	public static boolean isTouchingScreen() {
