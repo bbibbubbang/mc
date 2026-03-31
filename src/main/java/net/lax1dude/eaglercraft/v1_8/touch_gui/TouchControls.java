@@ -54,12 +54,6 @@ public class TouchControls {
 					loc[1] *= fac;
 					int size = ctrl.getSize() * fac;
 					if (x >= loc[0] && y >= loc[1] && x < loc[0] + size && y < loc[1] + size) {
-						input.x = x / fac;
-						input.y = y / fac;
-						continue;
-					} else if (ctrl == EnumTouchControl.JOYSTICK) {
-						input.x = x / fac;
-						input.y = y / fac;
 						continue;
 					}
 					EnumTouchControl[] en = EnumTouchControl._VALUES;
@@ -71,8 +65,6 @@ public class TouchControls {
 						loc[1] *= fac;
 						size = control.getSize() * fac;
 						if (x >= loc[0] && y >= loc[1] && x < loc[0] + size && y < loc[1] + size) {
-						input.x = x / fac;
-						input.y = y / fac;
 							touchControls.put(uid, new TouchControlInput(x / fac, y / fac, control));
 							break;
 						}
@@ -82,13 +74,6 @@ public class TouchControls {
 			mc.ingameGUI.updateTouchEagler(mc.currentScreen == null);
 		}else {
 			touchControls.clear();
-			for (EnumTouchControl c : touchControlPressed) {
-				if (c == EnumTouchControl.ACTION_LEFT_CLICK) {
-					net.minecraft.client.settings.KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindAttack.getKeyCode(), false);
-				} else if (c == EnumTouchControl.ACTION_RIGHT_CLICK) {
-					net.minecraft.client.settings.KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindUseItem.getKeyCode(), false);
-				}
-			}
 			touchControlPressed.clear();
 			mc.ingameGUI.updateTouchEagler(false);
 		}
@@ -142,15 +127,6 @@ public class TouchControls {
 					renderer.invalidate();
 				}
 				newPressed.add(input.control);
-			}
-			for (EnumTouchControl c : touchControlPressed) {
-				if (!newPressed.contains(c)) {
-					if (c == EnumTouchControl.ACTION_LEFT_CLICK) {
-						net.minecraft.client.settings.KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindAttack.getKeyCode(), false);
-					} else if (c == EnumTouchControl.ACTION_RIGHT_CLICK) {
-						net.minecraft.client.settings.KeyBinding.setKeyBindState(Minecraft.getMinecraft().gameSettings.keyBindUseItem.getKeyCode(), false);
-					}
-				}
 			}
 			touchControlPressed = newPressed;
 		}else {

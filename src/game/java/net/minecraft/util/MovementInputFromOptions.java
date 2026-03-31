@@ -34,36 +34,24 @@ public class MovementInputFromOptions extends MovementInput {
 	public void updatePlayerMoveState() {
 		this.moveStrafe = 0.0F;
 		this.moveForward = 0.0F;
-		if (this.gameSettings.keyBindForward.isKeyDown()) {
+		if (this.gameSettings.keyBindForward.isKeyDown() || TouchControls.isPressed(EnumTouchControl.DPAD_UP)
+				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_LEFT)
+				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_RIGHT)) {
 			++this.moveForward;
 		}
 
-		if (this.gameSettings.keyBindBack.isKeyDown()) {
+		if (this.gameSettings.keyBindBack.isKeyDown() || TouchControls.isPressed(EnumTouchControl.DPAD_DOWN)) {
 			--this.moveForward;
 		}
 
-		if (this.gameSettings.keyBindLeft.isKeyDown()) {
+		if (this.gameSettings.keyBindLeft.isKeyDown() || TouchControls.isPressed(EnumTouchControl.DPAD_LEFT)
+				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_LEFT)) {
 			++this.moveStrafe;
 		}
 
-		if (this.gameSettings.keyBindRight.isKeyDown()) {
+		if (this.gameSettings.keyBindRight.isKeyDown() || TouchControls.isPressed(EnumTouchControl.DPAD_RIGHT)
+				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_RIGHT)) {
 			--this.moveStrafe;
-		}
-
-		if (TouchControls.isPressed(EnumTouchControl.JOYSTICK)) {
-			for (com.carrotsearch.hppc.cursors.ObjectCursor<net.lax1dude.eaglercraft.v1_8.touch_gui.TouchControlInput> input_ : TouchControls.touchControls.values()) {
-				net.lax1dude.eaglercraft.v1_8.touch_gui.TouchControlInput input = input_.value;
-				if (input.control == EnumTouchControl.JOYSTICK) {
-					int dx = input.x - input.startX;
-					int dy = input.y - input.startY;
-					float maxRadius = 30.0f;
-					float normalizedX = (float) dx / maxRadius;
-					float normalizedY = (float) dy / maxRadius;
-					this.moveStrafe += Math.max(-1.0f, Math.min(1.0f, normalizedX));
-					this.moveForward += Math.max(-1.0f, Math.min(1.0f, -normalizedY));
-					break;
-				}
-			}
 		}
 
 		this.jump = this.gameSettings.keyBindJump.isKeyDown() || TouchControls.isPressed(EnumTouchControl.JUMP)
