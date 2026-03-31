@@ -161,19 +161,24 @@ public class TouchOverlayRenderer {
 		EntityPlayerSP player = mc.thePlayer;
 		if(player != null) {
 			if(player.capabilities.isFlying) {
-				 return EnumTouchLayoutState.IN_GAME_FLYING;
+				 return showDiagButtons() ? EnumTouchLayoutState.IN_GAME_WALK_FLYING : EnumTouchLayoutState.IN_GAME_FLYING;
 			}else {
 				if(player.capabilities.allowFlying) {
-					return EnumTouchLayoutState.IN_GAME_CAN_FLY;
+					return showDiagButtons() ? EnumTouchLayoutState.IN_GAME_WALK_CAN_FLY : EnumTouchLayoutState.IN_GAME_CAN_FLY;
 				}else {
-					return EnumTouchLayoutState.IN_GAME;
+					return showDiagButtons() ? EnumTouchLayoutState.IN_GAME_WALK : EnumTouchLayoutState.IN_GAME;
 				}
 			}
 		}else {
-			return EnumTouchLayoutState.IN_GAME;
+			return showDiagButtons() ? EnumTouchLayoutState.IN_GAME_WALK : EnumTouchLayoutState.IN_GAME;
 		}
 	}
 
+	private boolean showDiagButtons() {
+		return TouchControls.isPressed(EnumTouchControl.DPAD_UP)
+				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_LEFT)
+				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_RIGHT);
+	}
 
 	protected static void drawTexturedModalRect(float xCoord, float yCoord, int minU, int minV, int maxU, int maxV, int scaleFac) {
 		float f = 0.00390625F;

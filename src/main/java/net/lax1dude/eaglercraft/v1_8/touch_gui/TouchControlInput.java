@@ -19,14 +19,10 @@ package net.lax1dude.eaglercraft.v1_8.touch_gui;
 public class TouchControlInput {
 	public int x;
 	public int y;
-	public int startX;
-	public int startY;
 	public final EnumTouchControl control;
 	public TouchControlInput(int x, int y, EnumTouchControl control) {
 		this.x = x;
 		this.y = y;
-		this.startX = x;
-		this.startY = y;
 		this.control = control;
 	}
 }
