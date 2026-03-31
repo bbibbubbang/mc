@@ -1,0 +1,30 @@
+--- src/main/java/net/lax1dude/eaglercraft/v1_8/touch_gui/TouchOverlayRenderer.java
++++ src/main/java/net/lax1dude/eaglercraft/v1_8/touch_gui/TouchOverlayRenderer.java
+@@ -161,24 +161,17 @@
+		EntityPlayerSP player = mc.thePlayer;
+		if(player != null) {
+			if(player.capabilities.isFlying) {
+-				 return showDiagButtons() ? EnumTouchLayoutState.IN_GAME_WALK_FLYING : EnumTouchLayoutState.IN_GAME_FLYING;
++				 return EnumTouchLayoutState.IN_GAME_FLYING;
+			}else {
+				if(player.capabilities.allowFlying) {
+-					return showDiagButtons() ? EnumTouchLayoutState.IN_GAME_WALK_CAN_FLY : EnumTouchLayoutState.IN_GAME_CAN_FLY;
++					return EnumTouchLayoutState.IN_GAME_CAN_FLY;
+				}else {
+-					return showDiagButtons() ? EnumTouchLayoutState.IN_GAME_WALK : EnumTouchLayoutState.IN_GAME;
++					return EnumTouchLayoutState.IN_GAME;
+				}
+			}
+		}else {
+-			return showDiagButtons() ? EnumTouchLayoutState.IN_GAME_WALK : EnumTouchLayoutState.IN_GAME;
++			return EnumTouchLayoutState.IN_GAME;
+		}
+-	}
+-
+-	private boolean showDiagButtons() {
+-		return TouchControls.isPressed(EnumTouchControl.DPAD_UP)
+-				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_LEFT)
+-				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_RIGHT);
+	}
+
+	protected static void drawTexturedModalRect(float xCoord, float yCoord, int minU, int minV, int maxU, int maxV, int scaleFac) {
