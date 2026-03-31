@@ -60,6 +60,9 @@ public class TouchControls {
 					} else if (ctrl == EnumTouchControl.JOYSTICK) {
 						input.x = x / fac;
 						input.y = y / fac;
+						int[] jLoc = ctrl.getLocation(sr, TouchOverlayRenderer._fuck);
+						input.startX = jLoc[0] + 30;
+						input.startY = jLoc[1] + 30;
 						continue;
 					}
 					EnumTouchControl[] en = EnumTouchControl._VALUES;
@@ -71,9 +74,15 @@ public class TouchControls {
 						loc[1] *= fac;
 						size = control.getSize() * fac;
 						if (x >= loc[0] && y >= loc[1] && x < loc[0] + size && y < loc[1] + size) {
-						input.x = x / fac;
-						input.y = y / fac;
-							touchControls.put(uid, new TouchControlInput(x / fac, y / fac, control));
+							input.x = x / fac;
+							input.y = y / fac;
+							TouchControlInput newInput = new TouchControlInput(x / fac, y / fac, control);
+							if (control == EnumTouchControl.JOYSTICK) {
+								int[] jLoc = control.getLocation(sr, TouchOverlayRenderer._fuck);
+								newInput.startX = jLoc[0] + 30;
+								newInput.startY = jLoc[1] + 30;
+							}
+							touchControls.put(uid, newInput);
 							break;
 						}
 					}
@@ -100,7 +109,13 @@ public class TouchControls {
 		EnumTouchControl control = overlappingControl0(pointX, pointY, mc.scaledResolution);
 		if(control != null) {
 			int fac = mc.scaledResolution.getScaleFactor();
-			touchControls.put(uid, new TouchControlInput(pointX / fac, pointY / fac, control));
+			TouchControlInput newInput = new TouchControlInput(pointX / fac, pointY / fac, control);
+			if (control == EnumTouchControl.JOYSTICK) {
+				int[] jLoc = control.getLocation(mc.scaledResolution, TouchOverlayRenderer._fuck);
+				newInput.startX = jLoc[0] + 30;
+				newInput.startY = jLoc[1] + 30;
+			}
+			touchControls.put(uid, newInput);
 			return true;
 		}else {
 			return mc.currentScreen == null && Minecraft.getMinecraft().ingameGUI.handleTouchBeginEagler(uid, pointX, pointY);
