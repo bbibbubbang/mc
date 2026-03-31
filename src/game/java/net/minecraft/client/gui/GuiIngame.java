@@ -219,7 +219,6 @@ public class GuiIngame extends Gui {
 		}
 
 		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		drawEaglerInteractButton(scaledresolution);
 
 		onEndHotbarDraw();
 
@@ -1077,49 +1076,11 @@ public class GuiIngame extends Gui {
 	private int hotbarAreaW = -1;
 	private int hotbarAreaH = -1;
 	private int currentHotbarSlotTouch = -1;
-	private long hotbarSlotTouchStart = -1l;
-	private boolean hotbarSlotTouchAlreadySelected = false;
-	private int interactButtonX = -1;
-	private int interactButtonY = -1;
-	private int interactButtonW = -1;
-	private int interactButtonH = -1;
 	private int touchVPosX = -1;
 	private int touchVPosY = -1;
 	private int touchEventUID = -1;
-
-	private void drawEaglerInteractButton(ScaledResolution parScaledResolution) {
-		if (PointerInputAbstraction.isTouchMode() && mc.objectMouseOver != null
-				&& mc.objectMouseOver.typeOfHit == MovingObjectType.ENTITY) {
-			int scale = parScaledResolution.getScaleFactor();
-			interactButtonW = 118 * scale;
-			interactButtonH = 20 * scale;
-			int xx = (parScaledResolution.getScaledWidth() - 118) / 2;
-			int yy = parScaledResolution.getScaledHeight() - 70;
-			interactButtonX = xx * scale;
-			interactButtonY = yy * scale;
-			mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
-			boolean hover = touchVPosX >= interactButtonX && touchVPosY >= interactButtonY
-					&& touchVPosX < interactButtonX + interactButtonW && touchVPosY < interactButtonY + interactButtonH;
-			float f = MathHelper.clamp_float(mc.gameSettings.touchControlOpacity, 0.0f, 1.0f);
-			if (f > 0.0f) {
-				if (f < 1.0f)
-					GlStateManager.enableBlend();
-				GlStateManager.color(1.0f, 1.0f, 1.0f, f);
-				drawTexturedModalRect(xx, yy, 0, hover ? 216 : 236, 118, 20);
-				GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-				drawCenteredString(mc.fontRendererObj, I18n.format("touch.interact.entity"),
-						parScaledResolution.getScaledWidth() / 2, yy + 6,
-						(hover ? 16777120 : 14737632) | ((int) (f * 255.0f) << 24));
-				if (f < 1.0f)
-					GlStateManager.disableBlend();
-			}
-		} else {
-			interactButtonX = -1;
-			interactButtonY = -1;
-			interactButtonW = -1;
-			interactButtonH = -1;
-		}
-	}
+	private long hotbarSlotTouchStart = -1l;
+	private boolean hotbarSlotTouchAlreadySelected = false;
 
 	private int applyTouchHotbarTransformX(int posX, boolean scaled) {
 		if (scaled) {
@@ -1193,12 +1154,6 @@ public class GuiIngame extends Gui {
 						mc.displayGuiScreen(new GuiInventory(mc.thePlayer));
 					}
 				}
-				return true;
-			}
-			if (pointX >= interactButtonX && pointY >= interactButtonY && pointX < interactButtonX + interactButtonW
-					&& pointY < interactButtonY + interactButtonH) {
-				touchEventUID = uid;
-				mc.rightClickMouse();
 				return true;
 			}
 		}
@@ -1286,9 +1241,8 @@ public class GuiIngame extends Gui {
 		tx = applyTouchHotbarTransformX(tx, false);
 		ty = applyTouchHotbarTransformY(ty, false);
 		return (tx >= hotbarAreaX && ty >= hotbarAreaY && tx < hotbarAreaX + hotbarAreaW
-				&& ty < hotbarAreaY + hotbarAreaH)
-				|| (tx >= interactButtonX && ty >= interactButtonY && tx < interactButtonX + interactButtonW
-						&& ty < interactButtonY + interactButtonH);
+				&& ty < hotbarAreaY + hotbarAreaH);
+
 	}
 
 }
