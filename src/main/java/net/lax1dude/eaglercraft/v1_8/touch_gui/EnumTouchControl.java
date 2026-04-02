@@ -28,49 +28,43 @@ import net.minecraft.client.settings.GameSettings;
 
 public enum EnumTouchControl {
 	
-	DPAD_UP(EnumTouchControlPos.BOTTOM_LEFT, 60, 109, 44, null, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
+	JOYSTICK(EnumTouchControlPos.BOTTOM_LEFT, 32, 32, 64, null, (enumIn, x, y, pressed, mc, res) -> {
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 56, 0, 22, 22, 2);
+		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
+		// Draw base
+		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 100, 0, 32, 32, 2);
+
+		int knobX = pos[0] + 16;
+		int knobY = pos[1] + 16;
+
+		if(pressed) {
+			float len = (float)Math.sqrt(TouchControls.joystickX * TouchControls.joystickX + TouchControls.joystickY * TouchControls.joystickY);
+			float maxLen = 1.0f;
+			if(len > maxLen) len = maxLen;
+			knobX += (int)(TouchControls.joystickX * 32.0f * len);
+			knobY -= (int)(TouchControls.joystickY * 32.0f * len); // Y is inverted on screen
+		}
+
+		// Draw knob
+		TouchOverlayRenderer.drawTexturedModalRect(knobX, knobY, 132, 0, 16, 16, 2);
 	}),
 	
 	
-	DPAD_LEFT(EnumTouchControlPos.BOTTOM_LEFT, 11, 60, 44, null, (enumIn, x, y, pressed, mc, res) -> {
+	LMB(EnumTouchControlPos.BOTTOM_RIGHT, 112, 16, 44, null, (enumIn, x, y, pressed, mc, res) -> {
 		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
 		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 56, 22, 22, 22, 2);
 	}),
 	
 	
-	DPAD_RIGHT(EnumTouchControlPos.BOTTOM_LEFT, 109, 60, 44, null, (enumIn, x, y, pressed, mc, res) -> {
+	RMB(EnumTouchControlPos.BOTTOM_RIGHT, 16, 112, 44, null, (enumIn, x, y, pressed, mc, res) -> {
 		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
 		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 56, 66, 22, 22, 2);
 	}),
 	
 	
-	DPAD_DOWN(EnumTouchControlPos.BOTTOM_LEFT, 60, 11, 44, null, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
-		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 56, 44, 22, 22, 2);
-	}),
-	
-	
-	DPAD_UP_LEFT(EnumTouchControlPos.BOTTOM_LEFT, 16, 112, 36, null, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
-		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 18, 0, 18, 18, 2);
-	}),
-	
-	
-	DPAD_UP_RIGHT(EnumTouchControlPos.BOTTOM_LEFT, 112, 112, 36, null, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
-		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 18, 18, 18, 18, 2);
-	}),
-	
-	
-	JUMP(EnumTouchControlPos.BOTTOM_RIGHT, 64, 64, 36, (enumIn, x, y) -> {
+	JUMP(EnumTouchControlPos.BOTTOM_RIGHT, 16, 16, 44, (enumIn, x, y) -> {
 		if(!TouchControls.isPressed(enumIn)) {
 			if(TouchControls.isSneakToggled) {
 				TouchControls.resetSneakInvalidate();
@@ -83,7 +77,7 @@ public enum EnumTouchControl {
 	}),
 	
 	
-	SNEAK(EnumTouchControlPos.BOTTOM_LEFT, 64, 64, 36, (enumIn, x, y) -> {
+	SNEAK(EnumTouchControlPos.BOTTOM_RIGHT, 112, 112, 44, (enumIn, x, y) -> {
 		if(!TouchControls.isPressed(enumIn)) {
 			enumIn.invalid = true;
 			TouchControls.isSneakToggled = !TouchControls.isSneakToggled;
@@ -356,12 +350,9 @@ public enum EnumTouchControl {
 		if(layout == currentLayout) return;
 		switch(layout) {
 		case IN_GUI:
-			DPAD_UP.setVisible(renderer, false);
-			DPAD_LEFT.setVisible(renderer, false);
-			DPAD_RIGHT.setVisible(renderer, false);
-			DPAD_DOWN.setVisible(renderer, false);
-			DPAD_UP_LEFT.setVisible(renderer, false);
-			DPAD_UP_RIGHT.setVisible(renderer, false);
+			JOYSTICK.setVisible(renderer, false);
+			LMB.setVisible(renderer, false);
+			RMB.setVisible(renderer, false);
 			JUMP.setVisible(renderer, false);
 			SNEAK.setVisible(renderer, false);
 			BACK.setVisible(renderer, true);
@@ -380,12 +371,9 @@ public enum EnumTouchControl {
 			FLY_END.setVisible(renderer, false);
 			break;
 		case IN_GUI_TYPING:
-			DPAD_UP.setVisible(renderer, false);
-			DPAD_LEFT.setVisible(renderer, false);
-			DPAD_RIGHT.setVisible(renderer, false);
-			DPAD_DOWN.setVisible(renderer, false);
-			DPAD_UP_LEFT.setVisible(renderer, false);
-			DPAD_UP_RIGHT.setVisible(renderer, false);
+			JOYSTICK.setVisible(renderer, false);
+			LMB.setVisible(renderer, false);
+			RMB.setVisible(renderer, false);
 			JUMP.setVisible(renderer, false);
 			SNEAK.setVisible(renderer, false);
 			BACK.setVisible(renderer, true);
@@ -404,12 +392,9 @@ public enum EnumTouchControl {
 			FLY_END.setVisible(renderer, false);
 			break;
 		case IN_GUI_NO_BACK:
-			DPAD_UP.setVisible(renderer, false);
-			DPAD_LEFT.setVisible(renderer, false);
-			DPAD_RIGHT.setVisible(renderer, false);
-			DPAD_DOWN.setVisible(renderer, false);
-			DPAD_UP_LEFT.setVisible(renderer, false);
-			DPAD_UP_RIGHT.setVisible(renderer, false);
+			JOYSTICK.setVisible(renderer, false);
+			LMB.setVisible(renderer, false);
+			RMB.setVisible(renderer, false);
 			JUMP.setVisible(renderer, false);
 			SNEAK.setVisible(renderer, false);
 			BACK.setVisible(renderer, false);
@@ -428,12 +413,9 @@ public enum EnumTouchControl {
 			FLY_END.setVisible(renderer, false);
 			break;
 		case IN_GAME:
-			DPAD_UP.setVisible(renderer, true);
-			DPAD_LEFT.setVisible(renderer, true);
-			DPAD_RIGHT.setVisible(renderer, true);
-			DPAD_DOWN.setVisible(renderer, true);
-			DPAD_UP_LEFT.setVisible(renderer, false);
-			DPAD_UP_RIGHT.setVisible(renderer, false);
+			JOYSTICK.setVisible(renderer, true);
+			LMB.setVisible(renderer, true);
+			RMB.setVisible(renderer, true);
 			JUMP.setVisible(renderer, true);
 			SNEAK.setVisible(renderer, true);
 			BACK.setVisible(renderer, false);
@@ -452,12 +434,9 @@ public enum EnumTouchControl {
 			FLY_END.setVisible(renderer, false);
 			break;
 		case IN_GAME_WALK:
-			DPAD_UP.setVisible(renderer, true);
-			DPAD_LEFT.setVisible(renderer, true);
-			DPAD_RIGHT.setVisible(renderer, true);
-			DPAD_DOWN.setVisible(renderer, true);
-			DPAD_UP_LEFT.setVisible(renderer, true);
-			DPAD_UP_RIGHT.setVisible(renderer, true);
+			JOYSTICK.setVisible(renderer, true);
+			LMB.setVisible(renderer, true);
+			RMB.setVisible(renderer, true);
 			JUMP.setVisible(renderer, true);
 			SNEAK.setVisible(renderer, true);
 			BACK.setVisible(renderer, false);
@@ -476,12 +455,9 @@ public enum EnumTouchControl {
 			FLY_END.setVisible(renderer, false);
 			break;
 		case IN_GAME_CAN_FLY:
-			DPAD_UP.setVisible(renderer, true);
-			DPAD_LEFT.setVisible(renderer, true);
-			DPAD_RIGHT.setVisible(renderer, true);
-			DPAD_DOWN.setVisible(renderer, true);
-			DPAD_UP_LEFT.setVisible(renderer, false);
-			DPAD_UP_RIGHT.setVisible(renderer, false);
+			JOYSTICK.setVisible(renderer, true);
+			LMB.setVisible(renderer, true);
+			RMB.setVisible(renderer, true);
 			JUMP.setVisible(renderer, true);
 			SNEAK.setVisible(renderer, true);
 			BACK.setVisible(renderer, false);
@@ -500,12 +476,9 @@ public enum EnumTouchControl {
 			FLY_END.setVisible(renderer, false);
 			break;
 		case IN_GAME_WALK_CAN_FLY:
-			DPAD_UP.setVisible(renderer, true);
-			DPAD_LEFT.setVisible(renderer, true);
-			DPAD_RIGHT.setVisible(renderer, true);
-			DPAD_DOWN.setVisible(renderer, true);
-			DPAD_UP_LEFT.setVisible(renderer, true);
-			DPAD_UP_RIGHT.setVisible(renderer, true);
+			JOYSTICK.setVisible(renderer, true);
+			LMB.setVisible(renderer, true);
+			RMB.setVisible(renderer, true);
 			JUMP.setVisible(renderer, true);
 			SNEAK.setVisible(renderer, true);
 			BACK.setVisible(renderer, false);
@@ -524,12 +497,9 @@ public enum EnumTouchControl {
 			FLY_END.setVisible(renderer, false);
 			break;
 		case IN_GAME_FLYING:
-			DPAD_UP.setVisible(renderer, true);
-			DPAD_LEFT.setVisible(renderer, true);
-			DPAD_RIGHT.setVisible(renderer, true);
-			DPAD_DOWN.setVisible(renderer, true);
-			DPAD_UP_LEFT.setVisible(renderer, false);
-			DPAD_UP_RIGHT.setVisible(renderer, false);
+			JOYSTICK.setVisible(renderer, true);
+			LMB.setVisible(renderer, true);
+			RMB.setVisible(renderer, true);
 			JUMP.setVisible(renderer, false);
 			SNEAK.setVisible(renderer, true);
 			BACK.setVisible(renderer, false);
@@ -548,12 +518,9 @@ public enum EnumTouchControl {
 			FLY_END.setVisible(renderer, true);
 			break;
 		case IN_GAME_WALK_FLYING:
-			DPAD_UP.setVisible(renderer, true);
-			DPAD_LEFT.setVisible(renderer, true);
-			DPAD_RIGHT.setVisible(renderer, true);
-			DPAD_DOWN.setVisible(renderer, true);
-			DPAD_UP_LEFT.setVisible(renderer, true);
-			DPAD_UP_RIGHT.setVisible(renderer, true);
+			JOYSTICK.setVisible(renderer, true);
+			LMB.setVisible(renderer, true);
+			RMB.setVisible(renderer, true);
 			JUMP.setVisible(renderer, false);
 			SNEAK.setVisible(renderer, true);
 			BACK.setVisible(renderer, false);

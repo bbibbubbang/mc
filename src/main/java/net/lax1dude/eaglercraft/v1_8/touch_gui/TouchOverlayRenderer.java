@@ -175,9 +175,7 @@ public class TouchOverlayRenderer {
 	}
 
 	private boolean showDiagButtons() {
-		return TouchControls.isPressed(EnumTouchControl.DPAD_UP)
-				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_LEFT)
-				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_RIGHT);
+		return TouchControls.joystickY > 0.5f;
 	}
 
 	protected static void drawTexturedModalRect(float xCoord, float yCoord, int minU, int minV, int maxU, int maxV, int scaleFac) {

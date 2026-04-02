@@ -34,6 +34,9 @@ public class TouchControls {
 
 	protected static boolean isSneakToggled = false;
 
+	public static float joystickX = 0.0f;
+	public static float joystickY = 0.0f;
+
 	public static void update(boolean screenTouched) {
 		Minecraft mc = Minecraft.getMinecraft();
 		int h = mc.displayHeight;
@@ -49,6 +52,10 @@ public class TouchControls {
 				TouchControlInput input = touchControls.get(uid);
 				if(input != null) {
 					EnumTouchControl ctrl = input.control;
+					if(ctrl == EnumTouchControl.JOYSTICK) {
+						touchControls.put(uid, new TouchControlInput(x / fac, y / fac, ctrl));
+						continue;
+					}
 					loc = ctrl.getLocation(sr, TouchOverlayRenderer._fuck);
 					loc[0] *= fac;
 					loc[1] *= fac;
@@ -117,11 +124,28 @@ public class TouchControls {
 		if(!touchControls.isEmpty()) {
 			Set<EnumTouchControl> newPressed = EnumSet.noneOf(EnumTouchControl.class);
 			TouchOverlayRenderer renderer = Minecraft.getMinecraft().touchOverlayRenderer;
+			float jx = 0.0f;
+			float jy = 0.0f;
 			for (ObjectCursor<TouchControlInput> input_ : touchControls.values()) {
 				TouchControlInput input = input_.value;
 				TouchAction action = input.control.getAction();
 				if(action != null) {
 					action.call(input.control, input.x, input.y);
+				}
+				if(input.control == EnumTouchControl.JOYSTICK) {
+					int[] pos = EnumTouchControl.JOYSTICK.getLocation(Minecraft.getMinecraft().scaledResolution, TouchOverlayRenderer._fuck);
+					int size = EnumTouchControl.JOYSTICK.getSize();
+					int centerX = pos[0] + size / 2;
+					int centerY = pos[1] + size / 2;
+					float dx = (input.x - centerX) / (float)(size / 2);
+					float dy = (input.y - centerY) / (float)(size / 2);
+					float len = (float)Math.sqrt(dx * dx + dy * dy);
+					if(len > 1.0f) {
+						dx /= len;
+						dy /= len;
+					}
+					jx = dx;
+					jy = -dy; // Invert Y so up is positive
 				}
 				if(input.control.invalid) {
 					renderer.invalidate();
@@ -129,8 +153,12 @@ public class TouchControls {
 				newPressed.add(input.control);
 			}
 			touchControlPressed = newPressed;
+			joystickX = jx;
+			joystickY = jy;
 		}else {
 			touchControlPressed.clear();
+			joystickX = 0.0f;
+			joystickY = 0.0f;
 		}
 	}
 
