@@ -34,24 +34,25 @@ public class MovementInputFromOptions extends MovementInput {
 	public void updatePlayerMoveState() {
 		this.moveStrafe = 0.0F;
 		this.moveForward = 0.0F;
-		if (this.gameSettings.keyBindForward.isKeyDown() || TouchControls.isPressed(EnumTouchControl.DPAD_UP)
-				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_LEFT)
-				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_RIGHT)) {
+		if (this.gameSettings.keyBindForward.isKeyDown()) {
 			++this.moveForward;
 		}
 
-		if (this.gameSettings.keyBindBack.isKeyDown() || TouchControls.isPressed(EnumTouchControl.DPAD_DOWN)) {
+		if (this.gameSettings.keyBindBack.isKeyDown()) {
 			--this.moveForward;
 		}
 
-		if (this.gameSettings.keyBindLeft.isKeyDown() || TouchControls.isPressed(EnumTouchControl.DPAD_LEFT)
-				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_LEFT)) {
+		if (this.gameSettings.keyBindLeft.isKeyDown()) {
 			++this.moveStrafe;
 		}
 
-		if (this.gameSettings.keyBindRight.isKeyDown() || TouchControls.isPressed(EnumTouchControl.DPAD_RIGHT)
-				|| TouchControls.isPressed(EnumTouchControl.DPAD_UP_RIGHT)) {
+		if (this.gameSettings.keyBindRight.isKeyDown()) {
 			--this.moveStrafe;
+		}
+
+		if(TouchControls.joystickY != 0.0f || TouchControls.joystickX != 0.0f) {
+			this.moveForward = TouchControls.joystickY;
+			this.moveStrafe = TouchControls.joystickX;
 		}
 
 		this.jump = this.gameSettings.keyBindJump.isKeyDown() || TouchControls.isPressed(EnumTouchControl.JUMP)

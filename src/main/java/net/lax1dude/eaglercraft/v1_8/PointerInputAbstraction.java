@@ -222,7 +222,9 @@ public class PointerInputAbstraction {
 	}
 
 	public static boolean getVCursorButtonDown(int bt) {
-		return (touchingScreenNotButton && bt == 0) || Mouse.isButtonDown(bt);
+		if (bt == 0 && TouchControls.isPressed(net.lax1dude.eaglercraft.v1_8.touch_gui.EnumTouchControl.LMB)) return true;
+		if (bt == 1 && TouchControls.isPressed(net.lax1dude.eaglercraft.v1_8.touch_gui.EnumTouchControl.RMB)) return true;
+		return Mouse.isButtonDown(bt);
 	}
 
 }
