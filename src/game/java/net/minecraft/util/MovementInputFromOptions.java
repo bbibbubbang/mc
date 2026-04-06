@@ -52,7 +52,7 @@ public class MovementInputFromOptions extends MovementInput {
 
 		if(TouchControls.joystickY != 0.0f || TouchControls.joystickX != 0.0f) {
 			this.moveForward = TouchControls.joystickY;
-			this.moveStrafe = TouchControls.joystickX;
+			this.moveStrafe = -TouchControls.joystickX;
 		}
 
 		this.jump = this.gameSettings.keyBindJump.isKeyDown() || TouchControls.isPressed(EnumTouchControl.JUMP)

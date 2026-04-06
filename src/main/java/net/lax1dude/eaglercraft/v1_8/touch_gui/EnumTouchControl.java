@@ -20,6 +20,7 @@ import net.lax1dude.eaglercraft.v1_8.Touch;
 import net.lax1dude.eaglercraft.v1_8.minecraft.EnumInputEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.GuiScreen;
@@ -30,9 +31,8 @@ public enum EnumTouchControl {
 	
 	JOYSTICK(EnumTouchControlPos.BOTTOM_LEFT, 32, 32, 64, null, (enumIn, x, y, pressed, mc, res) -> {
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		// Draw base
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 100, 0, 32, 32, 2);
+		Gui.drawRect(pos[0], pos[1], pos[0] + 64, pos[1] + 64, 0x44000000);
 
 		int knobX = pos[0] + 16;
 		int knobY = pos[1] + 16;
@@ -46,46 +46,62 @@ public enum EnumTouchControl {
 		}
 
 		// Draw knob
-		TouchOverlayRenderer.drawTexturedModalRect(knobX, knobY, 132, 0, 16, 16, 2);
+		Gui.drawRect(knobX, knobY, knobX + 32, knobY + 32, 0x88FFFFFF);
 	}),
 	
 	
-	LMB(EnumTouchControlPos.BOTTOM_RIGHT, 112, 16, 44, null, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
+	LMB(EnumTouchControlPos.BOTTOM_RIGHT, 104, 60, 44, null, (enumIn, x, y, pressed, mc, res) -> {
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 56, 22, 22, 22, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "LMB";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
-	RMB(EnumTouchControlPos.BOTTOM_RIGHT, 16, 112, 44, null, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
+	RMB(EnumTouchControlPos.BOTTOM_RIGHT, 16, 60, 44, null, (enumIn, x, y, pressed, mc, res) -> {
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 56, 66, 22, 22, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "RMB";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
-	JUMP(EnumTouchControlPos.BOTTOM_RIGHT, 16, 16, 44, (enumIn, x, y) -> {
+	JUMP(EnumTouchControlPos.BOTTOM_RIGHT, 60, 16, 44, (enumIn, x, y) -> {
 		if(!TouchControls.isPressed(enumIn)) {
 			if(TouchControls.isSneakToggled) {
 				TouchControls.resetSneakInvalidate();
 			}
 		}
 	}, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 18, 90, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "JUMP";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
-	SNEAK(EnumTouchControlPos.BOTTOM_RIGHT, 112, 112, 44, (enumIn, x, y) -> {
+	SNEAK(EnumTouchControlPos.BOTTOM_RIGHT, 60, 104, 44, (enumIn, x, y) -> {
 		if(!TouchControls.isPressed(enumIn)) {
 			enumIn.invalid = true;
 			TouchControls.isSneakToggled = !TouchControls.isSneakToggled;
 		}
 	}, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 18, TouchControls.isSneakToggled ? 126 : 108, 18, 18, 2);
+		int color = pressed || TouchControls.isSneakToggled ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "SNEAK";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
@@ -103,23 +119,32 @@ public enum EnumTouchControl {
 			}
 		}
 	}, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 0, 36, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "ESC";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
 	BACK_DISABLED(EnumTouchControlPos.TOP, -18, 0, 36, null, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 0, 54, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
 	}),
 	
 	
 	KEYBOARD(EnumTouchControlPos.TOP, 18, 0, 36, null, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 0, 72, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "KBD";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
@@ -129,9 +154,13 @@ public enum EnumTouchControl {
 			mc.displayInGameMenu();
 		}
 	}, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 0, 0, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "PAUSE";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
@@ -141,9 +170,13 @@ public enum EnumTouchControl {
 			mc.displayGuiScreen(new GuiChat());
 		}
 	}, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 0, 18, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "CHAT";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
@@ -154,9 +187,13 @@ public enum EnumTouchControl {
 			gameSettings.showDebugInfo = !gameSettings.showDebugInfo;
 		}
 	}, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 218, 220, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "F3";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
@@ -166,9 +203,13 @@ public enum EnumTouchControl {
 			mc.togglePerspective();
 		}
 	}, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 218, 184, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "F5";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
@@ -180,9 +221,13 @@ public enum EnumTouchControl {
 			}
 		}
 	}, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 218, 148, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "PASTE";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
@@ -194,20 +239,28 @@ public enum EnumTouchControl {
 			}
 		}
 	}, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 218, 166, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "COPY";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
-	PICK(EnumTouchControlPos.BOTTOM_RIGHT, 62, 125, 40, (enumIn, x, y) -> {
+	PICK(EnumTouchControlPos.BOTTOM_RIGHT, 60, 148, 40, (enumIn, x, y) -> {
 		if(!TouchControls.isPressed(enumIn)) {
 			Minecraft.getMinecraft().middleClickMouse();
 		}
 	}, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 36, 20, 20, 20, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "PICK";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
@@ -219,34 +272,50 @@ public enum EnumTouchControl {
 			player.capabilities.isFlying = true;
 		}
 	}, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 18, 72, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "FLY";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
-	FLY_UP(EnumTouchControlPos.BOTTOM_RIGHT, 12, 120, 36, null, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
+	FLY_UP(EnumTouchControlPos.BOTTOM_RIGHT, 60, 104, 44, null, (enumIn, x, y, pressed, mc, res) -> {
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 18, 36, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "UP";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
-	FLY_DOWN(EnumTouchControlPos.BOTTOM_RIGHT, 12, 75, 36, null, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
+	FLY_DOWN(EnumTouchControlPos.BOTTOM_RIGHT, 60, 16, 44, null, (enumIn, x, y, pressed, mc, res) -> {
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 18, 54, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "DOWN";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	}),
 	
 	
-	FLY_END(EnumTouchControlPos.BOTTOM_RIGHT, 64, 64, 36, (enumIn, x, y) -> {
+	FLY_END(EnumTouchControlPos.BOTTOM_RIGHT, 16, 60, 44, (enumIn, x, y) -> {
 		if(!TouchControls.isPressed(enumIn)) {
 			Minecraft.getMinecraft().thePlayer.capabilities.isFlying = false;
 		}
 	}, (enumIn, x, y, pressed, mc, res) -> {
-		mc.getTextureManager().bindTexture(TouchOverlayRenderer.spriteSheet);
 		int[] pos = enumIn.getLocation(res, TouchOverlayRenderer._fuck);
-		TouchOverlayRenderer.drawTexturedModalRect(pos[0], pos[1], 18, 72, 18, 18, 2);
+		int color = pressed ? 0xAAFFFFFF : 0x88000000;
+		int size = enumIn.getSize();
+		Gui.drawRect(pos[0], pos[1], pos[0] + size, pos[1] + size, color);
+		String text = "END";
+		int textWidth = mc.fontRendererObj.getStringWidth(text);
+		mc.fontRendererObj.drawStringWithShadow(text, pos[0] + (size - textWidth) / 2.0f, pos[1] + (size - mc.fontRendererObj.FONT_HEIGHT) / 2.0f, 0xFFFFFFFF);
 	});
 
 	public static interface TouchAction {
