@@ -11,9 +11,38 @@
 		<meta property="og:title" content="EaglercraftX 1.8" />
 		<meta property="og:description" content="test directory HTML page" />
 		<link type="image/png" rel="shortcut icon" href="favicon.png" />
+		<style>
+			#portrait_overlay {
+				display: none;
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-color: black;
+				color: white;
+				z-index: 9999;
+				text-align: center;
+				padding-top: 40%;
+				font-family: sans-serif;
+				font-size: 24px;
+			}
+			@media screen and (orientation: portrait) {
+				#game_frame_container { display: none !important; }
+				#portrait_overlay { display: block !important; }
+			}
+		</style>
 		<script type="text/javascript" src="classes.js"></script>
 		<script type="text/javascript">
 			"use strict";
+			window.addEventListener("touchstart", function() {
+				if (document.documentElement.requestFullscreen && !document.fullscreenElement) {
+					document.documentElement.requestFullscreen().catch((err) => console.log(err));
+				}
+				if (screen.orientation && screen.orientation.lock) {
+					screen.orientation.lock("landscape").catch((err) => console.log(err));
+				}
+			}, { once: true });
 			window.addEventListener("load", function() {
 				if(window.location.href.indexOf("file:") === 0) {
 					alert("HTTP please, do not open this file locally, run a local HTTP server and load it via HTTP");
@@ -49,6 +78,10 @@
 			});
 		</script>
 	</head>
-	<body style="margin:0px;width:100%;height:100%;overflow:hidden;background-color:black;" id="game_frame">
+	<body style="margin:0px;width:100%;height:100%;overflow:hidden;background-color:black;">
+		<div style="margin:0px;width:100%;height:100%;" id="game_frame_container">
+			<div style="margin:0px;width:100%;height:100%;" id="game_frame"></div>
+		</div>
+		<div id="portrait_overlay">Please rotate your device to landscape mode.</div>
 	</body>
 </html>
