@@ -80,6 +80,12 @@ public class TouchControls {
 			}
 			mc.ingameGUI.updateTouchEagler(mc.currentScreen == null);
 		}else {
+			if(!touchControls.isEmpty()) {
+				for(ObjectCursor<TouchControlInput> input : touchControls.values()) {
+					input.value.control.invalid = true;
+				}
+				mc.touchOverlayRenderer.invalidate();
+			}
 			touchControls.clear();
 			touchControlPressed.clear();
 			mc.ingameGUI.updateTouchEagler(false);
@@ -100,7 +106,10 @@ public class TouchControls {
 	}
 
 	public static boolean handleTouchEnd(int uid, int pointX, int pointY) {
-		if(touchControls.remove(uid) != null) {
+		TouchControlInput removed = touchControls.remove(uid);
+		if(removed != null) {
+			removed.control.invalid = true;
+			Minecraft.getMinecraft().touchOverlayRenderer.invalidate();
 			return true;
 		}else {
 			Minecraft mc = Minecraft.getMinecraft();
