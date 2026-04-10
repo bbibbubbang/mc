@@ -475,9 +475,16 @@ public class MenuStateBoot extends MenuState {
 
 	@Override
 	protected void enterState() {
+		boolean isMobile = EagRuntime.getUserAgentString() != null && EagRuntime.getUserAgentString().toLowerCase().contains("mobi");
+		if(isMobile) {
+			doCountDown = true;
+			bootCountDown = 0;
+		}
 		if(doCountDown) {
 			bootCountDownStart = EagRuntime.steadyTimeMillis();
-			bootCountDown = BootMenuMain.bootMenuDataManager.confBootTimeout;
+			if(!isMobile) {
+				bootCountDown = BootMenuMain.bootMenuDataManager.confBootTimeout;
+			}
 			bootCountDownCur = bootCountDown;
 		}
 		selectionController.setup();
@@ -555,6 +562,12 @@ public class MenuStateBoot extends MenuState {
 
 	@Override
 	protected void update() {
+		if(doCountDown && bootCountDown == 0) {
+			BootItem def = selectionController.selectionEnableList.get(0).listItem;
+			def.runnable.accept(def);
+			doCountDown = false;
+			return;
+		}
 		if(bootCountDown > 0) {
 			int countDownCur = bootCountDown - (int)((EagRuntime.steadyTimeMillis() - bootCountDownStart) / 1000l);
 			if(countDownCur < 0) {

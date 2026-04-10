@@ -315,6 +315,18 @@ public class GuiSelectWorld extends GuiScreen implements GuiYesNoCallback {
 			GuiSelectWorld.this.recreateButton.enabled = flag1;
 			if (flag && flag1) {
 				GuiSelectWorld.this.func_146615_e(i);
+			} else if (flag1) {
+				int startX = (GuiSelectWorld.this.width - this.getListWidth()) / 2 + 200;
+				int topY = GuiSelectWorld.this.height - 64 - this.getContentHeight() + this.headerPadding + (i * this.slotHeight);
+				if (var3 >= startX && var3 <= startX + 13) {
+					String s1 = ((SaveFormatComparator) GuiSelectWorld.this.field_146639_s.get(i)).getFileName();
+					if(GuiSelectWorld.this.mc.gameSettings.defaultWorld.equals(s1)) {
+						GuiSelectWorld.this.mc.gameSettings.defaultWorld = "";
+					} else {
+						GuiSelectWorld.this.mc.gameSettings.defaultWorld = s1;
+					}
+					GuiSelectWorld.this.mc.gameSettings.saveOptions();
+				}
 			}
 
 		}
@@ -335,6 +347,16 @@ public class GuiSelectWorld extends GuiScreen implements GuiYesNoCallback {
 			SaveFormatComparator saveformatcomparator = (SaveFormatComparator) GuiSelectWorld.this.field_146639_s
 					.get(i);
 			String s = saveformatcomparator.getDisplayName();
+
+			String s3 = saveformatcomparator.getFileName();
+			boolean isDefault = GuiSelectWorld.this.mc.gameSettings.defaultWorld.equals(s3);
+
+			GuiSelectWorld.this.mc.getTextureManager().bindTexture(new ResourceLocation("textures/gui/widgets.png"));
+			GuiSelectWorld.this.drawTexturedModalRect(j + 200, k + 8, isDefault ? 208 : 195, 0, 13, 13);
+			if(GuiSelectWorld.this.mc.fontRendererObj.getStringWidth(I18n.format("selectWorld.defaultWorld")) > 0) {
+				GuiSelectWorld.this.drawString(GuiSelectWorld.this.fontRendererObj, I18n.format("selectWorld.defaultWorld"), j + 218, k + 10, 8421504);
+			}
+
 			if (StringUtils.isEmpty(s)) {
 				s = GuiSelectWorld.this.field_146637_u + " " + (i + 1);
 			}

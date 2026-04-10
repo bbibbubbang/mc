@@ -138,6 +138,7 @@ public class GameSettings {
 	private Map<SoundCategory, Float> mapSoundLevels = Maps.newEnumMap(SoundCategory.class);
 	public boolean field_181150_U = true;
 	public boolean field_181151_V = true;
+	public String defaultWorld = "";
 	public KeyBinding keyBindForward = new KeyBinding("key.forward", 17, "key.categories.movement");
 	public KeyBinding keyBindLeft = new KeyBinding("key.left", 30, "key.categories.movement");
 	public KeyBinding keyBindBack = new KeyBinding("key.back", 31, "key.categories.movement");
@@ -779,6 +780,10 @@ public class GameSettings {
 			while ((s = bufferedreader.readLine()) != null) {
 				try {
 					String[] astring = s.split(":");
+					if (astring[0].equals("defaultWorld")) {
+						this.defaultWorld = astring[1];
+					}
+
 					if (astring[0].equals("mouseSensitivity")) {
 						this.mouseSensitivity = this.parseFloat(astring[1]);
 					}
@@ -1217,6 +1222,7 @@ public class GameSettings {
 		try {
 			EaglerOutputStream bao = new EaglerOutputStream();
 			PrintWriter printwriter = new PrintWriter(new OutputStreamWriter(EaglerZLIB.newGZIPOutputStream(bao)));
+			printwriter.println("defaultWorld:" + this.defaultWorld);
 			printwriter.println("invertYMouse:" + this.invertMouse);
 			printwriter.println("mouseSensitivity:" + this.mouseSensitivity);
 			printwriter.println("fov:" + (this.fovSetting - 70.0F) / 40.0F);

@@ -119,6 +119,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	private boolean shouldReload = false;
 
 	private static GuiMainMenu instance = null;
+	private static boolean hasTriedDefaultWorld = false;
 
 	public GuiMainMenu() {
 		instance = this;
@@ -255,6 +256,14 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback {
 	 * window resizes, the buttonList is cleared beforehand.
 	 */
 	public void initGui() {
+		if(!hasTriedDefaultWorld && this.mc.gameSettings.defaultWorld != null && !this.mc.gameSettings.defaultWorld.isEmpty()) {
+			hasTriedDefaultWorld = true;
+			if (this.mc.getSaveLoader().canLoadWorld(this.mc.gameSettings.defaultWorld)) {
+				this.mc.launchIntegratedServer(this.mc.gameSettings.defaultWorld, this.mc.gameSettings.defaultWorld, (net.minecraft.world.WorldSettings) null);
+				return;
+			}
+		}
+
 		if (viewportTexture == null) {
 			viewportTexture = new MainMenuSkyboxTexture(256, 256);
 			backgroundTexture = this.mc.getTextureManager().getDynamicTextureLocation("background", viewportTexture);

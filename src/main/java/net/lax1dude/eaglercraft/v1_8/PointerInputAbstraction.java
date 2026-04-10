@@ -60,9 +60,24 @@ public class PointerInputAbstraction {
 		touchingScreenNotButton = false;
 		draggingNotTouching = false;
 		touchMode = !mcIn.mouseGrabSupported;
+		try {
+			if (EagRuntime.getUserAgentString() != null && EagRuntime.getUserAgentString().toLowerCase().contains("mobi")) {
+				touchMode = true;
+			}
+		} catch (Throwable t) {
+		}
 	}
 
 	public static void runGameLoop() {
+		try {
+			if (EagRuntime.getUserAgentString() != null && EagRuntime.getUserAgentString().toLowerCase().contains("mobi")) {
+				touchMode = true;
+			} else {
+				touchMode = false;
+			}
+		} catch (Throwable t) {
+		}
+
 		if(touchMode) {
 			runTouchUpdate();
 		}else {
@@ -166,7 +181,7 @@ public class PointerInputAbstraction {
 	}
 
 	public static boolean isTouchMode() {
-		return true;
+		return touchMode;
 	}
 
 	public static boolean isTouchingScreen() {
